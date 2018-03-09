@@ -1,0 +1,22 @@
+<module>
+  <rawname>returnontransfer</rawname>
+  <repo>unsupported</repo>
+  <name>Blind transfer callback on busy</name>
+  <version>1.0.0</version>
+  <category>Applications</category>
+  <Publisher>Stefano Fancello</Publisher>
+  <info></info>
+  <licence>GPL</licence>
+  <licenselink>http://www.gnu.org/licenses/gpl-2.0.txt</licenselink>
+  <menuitems>
+    <returnontransfer>Return on Blind Transfer</returnontransfer>
+</menuitems>
+<depends>
+  <version>14</version>
+</depends>
+<supported>14.0</supported>
+
+<description>If a blind transfer is made to extension that is busy/unavailable, call is sent back to original extension</description>
+<changelog></changelog>
+
+</module>
