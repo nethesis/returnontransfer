@@ -35,4 +35,76 @@ class Returnontransfer implements \BMO
 	public function restore($backup)
 	{
 	}
+
+	// http://wiki.freepbx.org/display/FOP/BMO+Hooks#BMOHooks-HTTPHooks(ConfigPageInits)
+	//
+	// This handles any data passed to this module before the page is rendered.
+	public function doConfigPageInit($page) {
+                error_log($_REQUEST['actiondd']);
+		//Handle form submissions
+		switch ($_REQUEST['action']) {
+		case 'save':
+                    $dbh = \FreePBX::Database();
+                    foreach (['timeout','prefix','alertinfo'] as $keyword) {
+                        $sql = "REPLACE INTO returnontransfer (keyword,value) VALUES (?,?)";
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute(array($keyword,$_REQUEST[$keyword]));
+                    }
+                    $sql = array();
+                    if ($_REQUEST['enabled']==1) {
+                        $sql[] = "REPLACE INTO `returnontransfer` (keyword,value) VALUES ('enabled','true')";
+                        $sql[] = "UPDATE `freepbx_settings` SET `value` = 'blindxfer_ringback' WHERE `keyword` = 'TRANSFER_CONTEXT'";
+                    } else {
+                        $sql[] = "REPLACE INTO `returnontransfer` (keyword,value) VALUES ('enabled','false')";
+                        $sql[] = "UPDATE `freepbx_settings` SET `value` = 'from-internal-xfer' WHERE `keyword` = 'TRANSFER_CONTEXT'";
+                    }
+                    foreach ($sql as $query) {
+                        $stmt = $dbh->prepare($query);
+                        $stmt->execute(array());
+                    }
+                    needreload();
+		    break;
+		}
+	}
+
+	// http://wiki.freepbx.org/pages/viewpage.action?pageId=29753755
+	public function getActionBar($request)
+	{
+		$buttons = array();
+		switch ($request['display']) {
+		case 'returnontransfer':
+			$buttons = array(
+				'submit' => array(
+					'name' => 'submit',
+					'id' => 'submit',
+					'value' => _('Submit')
+				)
+			);
+			if (empty($request['extdisplay'])) {
+				unset($buttons['delete']);
+			}
+			break;
+		}
+		return $buttons;
+	}
+
+	// http://wiki.freepbx.org/display/FOP/BMO+Ajax+Calls
+	public function ajaxRequest($req, &$setting)
+	{
+		switch ($req) {
+		case 'getJSON':
+			return true;
+			break;
+		default:
+			return false;
+			break;
+		}
+	}
+
+	public function showPage()
+	{
+            $subhead = _('Return on Blind Transfer Options');
+            $content = load_view(__DIR__.'/views/form.php');
+            echo load_view(__DIR__.'/views/default.php', array('subhead' => $subhead, 'content' => $content));
+	}
 }

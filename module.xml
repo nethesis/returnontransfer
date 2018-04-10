@@ -1,7 +1,7 @@
 <module>
   <rawname>returnontransfer</rawname>
   <repo>unsupported</repo>
-  <name>Blind transfer callback on busy</name>
+  <name>Transfer callback</name>
   <version>1.0.0</version>
   <category>Applications</category>
   <Publisher>Stefano Fancello</Publisher>
@@ -9,7 +9,7 @@
   <licence>GPL</licence>
   <licenselink>http://www.gnu.org/licenses/gpl-2.0.txt</licenselink>
   <menuitems>
-    <returnontransfer>Return on Blind Transfer</returnontransfer>
+    <returnontransfer>Blind transfer callback on busy</returnontransfer>
 </menuitems>
 <depends>
   <version>14</version>

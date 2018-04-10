@@ -23,12 +23,22 @@
 function returnontransfer_get_config($engine){
     global $ext;
     global $asterisk_conf;
+    $timeout = returnontransfer_get('timeout');
+    if (!isset($timeout) || empty($timeout)) {
+        $timeout = 15;
+    }
+    $prefix = returnontransfer_get('prefix');
+    if (!isset($prefix) || empty($prefix)) {
+        $prefix = 'RT: ${xfer_exten} ${CALLERID(name)}';
+    }
+    $alertinfo = returnontransfer_get('alertinfo');
     switch($engine) {
-    case "asterisk":
-        $context = 'blindxfer_ringback';
-        $e = '_X.';
+        case "asterisk":
+        if (returnontransfer_get('enabled') === 'true') {
+            $context = 'blindxfer_ringback';
+            $e = '_X.';
             $ext->add($context,$e,'',new ext_noop('${BLINDTRANSFER}'));
-            $ext->add($context,$e,'n', new ext_set('timeoutd','10'));           
+            $ext->add($context,$e,'n', new ext_set('timeoutd',$timeout)); // Set timeout
             $ext->add($context,$e,'', new ext_set('CHANNEL(language)', '${MASTER_CHANNEL(CHANNEL(language))}'));
             $ext->add($context,$e,'n', new ext_set('xfer_exten','${EXTEN}'));           
             $ext->add($context,$e,'',new ext_noop('${xfer_exten}'));
@@ -37,15 +47,29 @@ function returnontransfer_get_config($engine){
             $ext->add($context,$e,'',new ext_dial('local/${EXTEN}@${xfer_context}','${timeoutd}'));
             $ext->add($context,$e,'',new ext_noop('${BLINDTRANSFER}'));
             $ext->add($context,$e,'n', new ext_set('foo','${CUT(BLINDTRANSFER,-,1)}'));           
-            $ext->add($context,$e,'n', new ext_set('cb_exten','${CUT(foo,/,2)}')); # cut everything before the / character
+            $ext->add($context,$e,'n', new ext_set('cb_exten','${CUT(foo,/,2)}')); 
             $ext->add($context,$e,'',new ext_noop('${cb_exten}'));
             $ext->add($context,$e,'',new ext_gotoif('$["${DIALSTATUS}" = "ANSWER"]','hangup:callback'));
-            $ext->add($context,$e,'n', new ext_set('CALLERID(name)','RB From ${xfer_exten} ${CALLERID(name)}')); #prefix CID name with RB to indicate it is a ringback
+            $ext->add($context,$e,'n', new ext_set('CALLERID(name)',$prefix)); # Set prefix to indicate it is a ringback
+            if (isset($alertinfo) && !empty($alertinfo) && $alertinfo != "") {
+                $ext->add($context,$e,'n', new ext_setvar('__ALERT_INFO', $alertinfo));
+            }
             $ext->add($context,$e,'',new ext_agi('returnontransfer_setContext.php,${cb_exten}'));
             $ext->add($context,$e,'',new ext_noop('${xfer_context}'));
             $ext->add($context,$e,'',new ext_dial('local/${cb_exten}@${xfer_context},'));
             $ext->add($context,$e,'',new ext_hangup(''));
             $ext->add($context,'h','',new ext_hangup(''));
+        }
         break;
     }
 }
+
+function returnontransfer_get($keyword) {
+    $dbh = FreePBX::Database();
+    $sql = 'SELECT `value` FROM `returnontransfer` WHERE `keyword` = ?';
+    $sth = $dbh->prepare($sql);
+    $sth->execute(array($keyword));
+    $res = $sth->fetchAll()[0][0];
+    return $res;
+}
+
