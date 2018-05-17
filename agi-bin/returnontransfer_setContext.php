@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/scl enable rh-php56 -- php
 <?php
 
 #
