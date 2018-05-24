@@ -29,19 +29,31 @@ global $db;
 
 $agi = new AGI();
 $extension = $argv[1];
+$callernum = $argv[2];
+$blindnum = $argv[3];
 
-//get park extension
-$sql = "SELECT parkext from parkplus;";
-$data=@$db->getRow($sql);
-$park_ext = $data[0];
-if($park_ext == $extension) {
-    @$agi->exec("Set", "xfer_context=from-internal");
-    exit (0);
-}
-
-//get context
+//get xfer dest context
 $sql2 = "SELECT data FROM sip where keyword=\"context\" and id=\"$extension\";";
 $result = @$db->getRow($sql2);
-$context = $result[0];
-@$agi->exec("Set", "xfer_context=$context");
+$extension_context = $result[0];
 
+//check context of xfer dest
+if($extension_context!='') {
+         @$agi->exec("Set", "xfer_context=$extension_context");
+} else {
+         //get caller context
+         $sql3 = "SELECT data FROM sip where keyword=\"context\" and id=\"$callernum\";";
+         $result = @$db->getRow($sql3);
+         $callerid_context = $result[0];
+
+         //check context of caller
+         if ($callerid_context!='') {
+                @$agi->exec("Set", "xfer_context=$callerid_context");
+         } else {
+                //get blind context
+                $sql4 = "SELECT data FROM sip where keyword=\"context\" and id=\"$blindnum\";";
+                $result = @$db->getRow($sql4);
+                $blind_context = $result[0];
+                @$agi->exec("Set", "xfer_context=$blind_context");
+         }
+}
