@@ -38,23 +38,26 @@ function returnontransfer_get_config($engine){
             $context = 'blindxfer_ringback';
             $e = '_X.';
             $ext->add($context,$e,'',new ext_noop('${BLINDTRANSFER}'));
+            $ext->add($context,$e,'', new ext_set('blind','${CUT(BLINDTRANSFER,-,1)}'));
+            $ext->add($context,$e,'', new ext_set('blind_exten','${CUT(foo,/,2)}'));
+            $ext->add($context,$e,'',new ext_noop('${blind_exten}'));
             $ext->add($context,$e,'', new ext_set('timeoutd',$timeout)); // Set timeout
             $ext->add($context,$e,'', new ext_set('CHANNEL(language)', '${MASTER_CHANNEL(CHANNEL(language))}'));
-            $ext->add($context,$e,'', new ext_set('xfer_exten','${EXTEN}'));           
+            $ext->add($context,$e,'', new ext_set('xfer_exten','${EXTEN}'));
             $ext->add($context,$e,'',new ext_noop('${xfer_exten}'));
-            $ext->add($context,$e,'',new ext_agi('returnontransfer_setContext.php,${xfer_exten}'));
+            $ext->add($context,$e,'',new ext_agi('returnontransfer_setContext.php,${xfer_exten},${CALLERID(num)},${blind_exten}'));
             $ext->add($context,$e,'',new ext_noop('${xfer_context}'));
             $ext->add($context,$e,'',new ext_dial('local/${EXTEN}@${xfer_context}','${timeoutd}'));
             $ext->add($context,$e,'',new ext_noop('${BLINDTRANSFER}'));
-            $ext->add($context,$e,'', new ext_set('foo','${CUT(BLINDTRANSFER,-,1)}'));           
-            $ext->add($context,$e,'', new ext_set('cb_exten','${CUT(foo,/,2)}')); 
+            $ext->add($context,$e,'', new ext_set('foo','${CUT(BLINDTRANSFER,-,1)}'));
+            $ext->add($context,$e,'', new ext_set('cb_exten','${CUT(foo,/,2)}'));
             $ext->add($context,$e,'',new ext_noop('${cb_exten}'));
             $ext->add($context,$e,'',new ext_gotoif('$["${DIALSTATUS}" = "ANSWER"]','hangup:callback'));
             $ext->add($context,$e,'callback', new ext_set('CALLERID(name)',$prefix)); # Set prefix to indicate it is a ringback
             if (isset($alertinfo) && !empty($alertinfo) && $alertinfo != "") {
                 $ext->add($context,$e,'', new ext_setvar('__ALERT_INFO', $alertinfo));
             }
-            $ext->add($context,$e,'',new ext_agi('returnontransfer_setContext.php,${cb_exten}'));
+            $ext->add($context,$e,'',new ext_agi('returnontransfer_setContext.php,${cb_exten},${CALLERID(num)}'));
             $ext->add($context,$e,'',new ext_noop('${xfer_context}'));
             $ext->add($context,$e,'',new ext_dial('local/${cb_exten}@${xfer_context},'));
             $ext->add($context,$e,'hangup',new ext_hangup(''));
