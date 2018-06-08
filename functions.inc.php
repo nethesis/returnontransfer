@@ -39,7 +39,7 @@ function returnontransfer_get_config($engine){
             $e = '_X.';
             $ext->add($context,$e,'',new ext_noop('${BLINDTRANSFER}'));
             $ext->add($context,$e,'', new ext_set('blind','${CUT(BLINDTRANSFER,-,1)}'));
-            $ext->add($context,$e,'', new ext_set('blind_exten','${CUT(foo,/,2)}'));
+            $ext->add($context,$e,'', new ext_set('blind_exten','${CUT(blind,/,2)}'));
             $ext->add($context,$e,'',new ext_noop('${blind_exten}'));
             $ext->add($context,$e,'', new ext_set('timeoutd',$timeout)); // Set timeout
             $ext->add($context,$e,'', new ext_set('CHANNEL(language)', '${MASTER_CHANNEL(CHANNEL(language))}'));
