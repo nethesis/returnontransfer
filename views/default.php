@@ -1,5 +1,5 @@
 <div class="container-fluid">
-	<h1><?php echo _("Blind transfer callback on busy")?></h1>
+	<h1><?php echo _("Blind transfer callback")?></h1>
 	<h2><?php echo $subhead?></h2>
 	<div class = "display full-border">
 		<div class="row">
