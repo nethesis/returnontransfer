@@ -63,7 +63,6 @@ class Returnontransfer extends \FreePBX_Helpers implements \BMO
 			} else {
 				$this->setConfig('enabled',false);
 				$this->FreePBX->Config->reset_conf_settings(array('TRANSFER_CONTEXT'),true);
-				dbug("OK");
 			}
 			needreload();
 			break;
