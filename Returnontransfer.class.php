@@ -79,7 +79,7 @@ class Returnontransfer extends \FreePBX_Helpers implements \BMO
 	{
 		$settings = $this->getAll();
 		$timeout = !empty($settings['timeout']) ? $settings['timeout'] : 15;
-		$prefix = !empty($settings['prefix']) ? empty($settings['prefix']) : 'RT: ${xfer_exten} ${CALLERID(name)}';
+		$prefix = !empty($settings['prefix']) ? $settings['prefix'] : 'RT: ${xfer_exten} ${CALLERID(name)}';
 		$alertinfo = $settings['alertinfo'];
 
 		if ($settings['enabled']) {
