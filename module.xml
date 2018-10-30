@@ -2,7 +2,7 @@
 	<rawname>returnontransfer</rawname>
 	<repo>unsupported</repo>
 	<name>Transfer callback</name>
-	<version>1.1.5</version>
+	<version>1.1.7</version>
 	<category>Applications</category>
 	<Publisher>Stefano Fancello</Publisher>
 	<description>If a blind transfer is made to extension that is busy/unavailable, call is sent back to original extension</description>
@@ -14,7 +14,7 @@
 		<returnontransfer>Blind transfer callback</returnontransfer>
 	</menuitems>
 	<depends>
-		<version>14</version>
+		<version>14.0.0</version>
 	</depends>
-	<supported>14.0</supported>
+	<supported>14.0.0</supported>
 </module>
