@@ -53,7 +53,7 @@ if($extension_context!='') {
     //get blind context
     $sql4 = "SELECT data FROM sip where `keyword`='context' and `id` = :blindnum";
     $sth = $db->prepare($sql4);
-    $sth->execute(array(':blindnum' => $callernum));
+    $sth->execute(array(':blindnum' => $blindnum));
     $blind_context = $sth->fetch(\PDO::FETCH_COLUMN);
     @$agi->exec("Set", "xfer_context=$blind_context");
   }
