@@ -95,7 +95,7 @@ class Returnontransfer extends \FreePBX_Helpers implements \BMO
 			$ext->add($context,$e,'',new \ext_noop('${xfer_exten}'));
 			$ext->add($context,$e,'',new \ext_execif('$["${DB(AMPUSER/${CALLERID(num)}/cidnum)}" == ""]', 'Set','blind_cid=${CALLERID(num)}','Set','blind_cid=${DB(AMPUSER/${CALLERID(num)}/cidnum)}'));
 			$ext->add($context,$e,'',new \ext_noop('${blind_cid}'));
-			$ext->add($context,$e,'',new \ext_execif('$["${DB(AMPUSER/${CALLERID(num)}/cidnum)}" == "" && "${DB(AMPUSER/${DEXTEN}/cidnum)}" != "" && "${DB(AMPUSER/${xfer_exten}/cidnum)}" == ""]', 'Set','__REALCALLERIDNUM=${DEXTEN}', 'Set','__REALCALLERIDNUM=${blind_cid}'));
+			$ext->add($context,$e,'',new \ext_execif('$["${DB(AMPUSER/${CALLERID(num)}/cidnum)}" == "" && "${DB(AMPUSER/${DEXTEN}/cidnum)}" != "" && "${DB(AMPUSER/${xfer_exten}/cidnum)}" == "" && "${DB(QPENALTY/${xfer_exten}/dynmemberonly)}" == ""]', 'Set','__REALCALLERIDNUM=${DEXTEN}', 'Set','__REALCALLERIDNUM=${blind_cid}'));
 			$ext->add($context,$e,'',new \ext_noop('${REALCALLERIDNUM}'));
 			$ext->add($context,$e,'',new \ext_agi('returnontransfer_setContext.php,${xfer_exten},${CALLERID(num)},${blind_exten}'));
 			$ext->add($context,$e,'',new \ext_noop('${xfer_context}'));
