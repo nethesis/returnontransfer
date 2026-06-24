@@ -8,8 +8,8 @@
 	<description>If a blind transfer is made to extension that is busy/unavailable, call is sent back to original extension</description>
 	<changelog></changelog>
 	<info></info>
-	<licence>GPL</licence>
-	<licenselink>http://www.gnu.org/licenses/gpl-2.0.txt</licenselink>
+	<license>GPLv3+</license>
+	<licenselink>http://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
 	<menuitems>
 		<returnontransfer>Blind transfer callback</returnontransfer>
 	</menuitems>
