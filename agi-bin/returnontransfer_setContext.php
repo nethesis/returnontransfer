@@ -57,7 +57,7 @@ if($extension_context!='') {
     $blind_context = $sth->fetch(\PDO::FETCH_COLUMN);
     if (empty($blind_context)) {
             # Search for context in trunks
-	    $sql5 = "SELECT p1.data FROM pjsip p1 JOIN pjsip p2 ON p1.id = p2.id WHERE p1.keyword = 'context' AND p2.keyword = 'trunk_name' AND p2.data = :blindnum";
+            $sql5 = "SELECT p1.data FROM pjsip p1 JOIN pjsip p2 ON p1.id = p2.id WHERE p1.keyword = 'context' AND p2.keyword = 'trunk_name' AND p2.data = :blindnum";
             $sth = $db->prepare($sql5);
             $sth->execute(array(':blindnum' => $blindnum));
             $blind_context = $sth->fetch(\PDO::FETCH_COLUMN);
